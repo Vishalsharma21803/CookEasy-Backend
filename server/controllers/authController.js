@@ -14,8 +14,12 @@ exports.register= async(req,res)=>{
             // 1. Check if user exists
             console.log("Incoming data:", req.body);
             const userExist=await User.findOne({email});
+            const usernameExists=await User.findOne({username});
             if(userExist){
-                res.status(404).json({msg: "User already exists"});
+                return res.status(409).json({msg: "User already exists"});
+            }
+            if(usernameExists){
+                return res.status(409).json({msg:"username already exists try something else"});
             }
 
              // 2. Hash the password
@@ -24,7 +28,18 @@ exports.register= async(req,res)=>{
             // 3. Save user
             const newUser=new User({username,email, password: hashedPassword});
             await newUser.save();
-            res.status(200).json({msg: "user registered successfully"});
+
+            const token=jwt.sign({id:newUser._id},JWT_SECRET,{expiresIn: "1h"});
+            res.status(200).json({
+                msg: "user registered successfully",
+                token,
+                user:{
+                    id: newUser._id,
+                    username: newUser.username,
+                    email: newUser.email
+                }
+
+            });
     }
     catch(err){
         res.status(500).json({msg:"Error", error: err.message});
