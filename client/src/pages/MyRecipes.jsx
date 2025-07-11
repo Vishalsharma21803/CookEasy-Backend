@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import API from "../api/api";
 import RecipeCard from "../components/RecipeCard";
+import { toast } from "react-toastify"; // <-- Add this import
 
 function MyRecipes() {
   const { token } = useContext(AuthContext);
@@ -37,11 +38,11 @@ function MyRecipes() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Remove the deleted recipe from state
       setMyRecipes((prev) => prev.filter((recipe) => recipe._id !== id));
+      toast.success("Recipe deleted successfully!"); // <-- Toast message
     } catch (err) {
       console.error("Error deleting recipe:", err);
-      alert("Something went wrong while deleting.");
+      toast.error("Something went wrong while deleting."); // <-- Toast message
     }
   };
 
