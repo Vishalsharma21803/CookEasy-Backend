@@ -1,15 +1,15 @@
 const Recipe=require('../models/Recipe');
 const User = require("../models/Users");
 
-exports.getMyRecipes=async(req, res)=>{
-    try{
-        const recipes=await Recipe.find({createdBy: req.user.id}).populate('createdBy','username');
-        res.status(200).json(recipes);
-    }
-    catch (err) {
-    res.status(500).json({ msg: "Error fetching your recipes", error: err.message });
-  }
-};
+// exports.getMyRecipes=async(req, res)=>{
+//     try{
+//         const recipes=await Recipe.find({createdBy: req.user.id}).populate('createdBy','username');
+//         res.status(200).json(recipes);
+//     }
+//     catch (err) {
+//     res.status(500).json({ msg: "Error fetching your recipes", error: err.message });
+//   }
+// };
 
 
 exports.getFavoriteRecipes=async (req, res)=>{
